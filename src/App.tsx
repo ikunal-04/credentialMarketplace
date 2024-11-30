@@ -19,7 +19,8 @@ export default function Home() {
   useEffect(() => {
     const init = async () => {
       if (typeof window.ethereum !== 'undefined') {
-        const provider = new ethers.BrowserProvider(window.ethereum)
+        const ethereum = window.ethereum as unknown as ethers.Eip1193Provider;
+        const provider = new ethers.BrowserProvider(ethereum)
         const signer = await provider.getSigner()
         const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer)
         
@@ -29,7 +30,7 @@ export default function Home() {
         const accounts = await provider.send("eth_requestAccounts", [])
         setAccount(accounts[0])
 
-        window.ethereum.on('accountsChanged', (accounts: string[]) => {
+        window.ethereum?.on?.('accountsChanged', (accounts: string[]) => {
           setAccount(accounts[0])
         })
       } else {
